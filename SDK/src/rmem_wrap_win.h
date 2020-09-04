@@ -18,25 +18,28 @@ static fnGetModuleInformation	sFn_getModuleInformation	= 0;
 static fnEnumProcessModules		sFn_enumProcessModules		= 0;
 static fnGetModuleFileNameExW	sFn_getModuleFileNameExW	= 0;
 
-static void* loadFunc(HMODULE _kernel, HMODULE _psapi, const char* _name)
-{
-	FARPROC ret = ::GetProcAddress(_kernel, _name);
-	if (!ret && (_psapi != 0))
-		ret = ::GetProcAddress(_psapi, _name);
-	return reinterpret_cast<void*>(ret);
-}
+//static void* loadFunc(HMODULE _kernel, HMODULE _psapi, const char* _name)
+//{
+//	FARPROC ret = ::GetProcAddress(_kernel, _name);
+//	if (!ret && (_psapi != 0))
+//		ret = ::GetProcAddress(_psapi, _name);
+//	return reinterpret_cast<void*>(ret);
+//}
 
 static bool loadModuleFuncs()
 {
 	if (sFn_getModuleInformation)
 		return true;
 
-	HMODULE kerneldll32	= ::GetModuleHandleA("kernel32");
-	HMODULE psapiDLL	= ::LoadLibraryA("Psapi.dll");
+	//HMODULE kerneldll32	= ::GetModuleHandleA("kernel32");
+	//HMODULE psapiDLL	= ::GetModuleHandleA("psapi");
 
-	sFn_getModuleInformation	= reinterpret_cast<fnGetModuleInformation>(loadFunc(kerneldll32, psapiDLL, "GetModuleInformation"));
-	sFn_enumProcessModules		= reinterpret_cast<fnEnumProcessModules>  (loadFunc(kerneldll32, psapiDLL, "EnumProcessModules"));
-	sFn_getModuleFileNameExW	= reinterpret_cast<fnGetModuleFileNameExW>(loadFunc(kerneldll32, psapiDLL, "GetModuleFileNameExW"));
+	//sFn_getModuleInformation	= reinterpret_cast<fnGetModuleInformation>(loadFunc(kerneldll32, psapiDLL, "GetModuleInformation"));
+	//sFn_enumProcessModules		= reinterpret_cast<fnEnumProcessModules>  (loadFunc(kerneldll32, psapiDLL, "EnumProcessModules"));
+	//sFn_getModuleFileNameExW	= reinterpret_cast<fnGetModuleFileNameExW>(loadFunc(kerneldll32, psapiDLL, "GetModuleFileNameExW"));
+	sFn_getModuleInformation	= &GetModuleInformation;
+	sFn_enumProcessModules		= &EnumProcessModules;
+	sFn_getModuleFileNameExW	= &GetModuleFileNameExW;
 
 	return ((sFn_getModuleInformation	!= 0) &&
 			(sFn_enumProcessModules		!= 0) &&

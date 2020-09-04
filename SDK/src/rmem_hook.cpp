@@ -73,11 +73,11 @@ namespace rmem {
 /// we need to guarantee that the internal buffer is writable.
 /// Since the buffer is full we need to copy the data so we can
 /// reset the buffer pointer and practically make the buffer empty again.
-/// The code assumes that buffer is big enough to store all information 
+/// The code assumes that buffer is big enough to store all information
 /// resulting from file writing calls. Generally that's not a problem as
 /// it already has to be big enough to store the CRT initialization data.
 /// Since the buffer is static, it is also assumed that this is single
-/// threaded operation which is guaranteed by a lock on a higher level 
+/// threaded operation which is guaranteed by a lock on a higher level
 /// (dispatcher).
 static uint8_t s_tempBuffer[MemoryHook::BufferSize];
 
@@ -88,7 +88,7 @@ MemoryHook::MemoryHook(void* _data)
 	: m_ignoreAllocs(false)
 {
 	(void)_data;
-	
+
 	m_startTime = getCPUClock();
 	m_bufferPtr	= m_bufferData;
 
@@ -176,7 +176,7 @@ MemoryHook::MemoryHook(void* _data)
 	writeToBuffer(&verLow, sizeof(verLow));
 	writeToBuffer(&toolChain, sizeof(toolChain));
 	writeToBuffer(&cpuFrequency, sizeof(cpuFrequency));
-		
+
 	//----------- Header data written, below code can allocate memory ---------
 	m_ignoreAllocs = true;
 
@@ -191,7 +191,7 @@ MemoryHook::MemoryHook(void* _data)
 	else
 	{
 		m_fileName[0] = 0;
-		HMODULE shelldll32 = ::LoadLibraryA("Shell32");
+		HMODULE shelldll32 = ::GetModuleHandleA("Shell32");
 		if (shelldll32)
 		{
 			fnSHGetFolderPathW fn = reinterpret_cast<fnSHGetFolderPathW>(reinterpret_cast<void*>(::GetProcAddress(shelldll32, "SHGetFolderPathW")));
@@ -208,7 +208,7 @@ MemoryHook::MemoryHook(void* _data)
 			else
 				m_fileName[0] = 0;
 
-			FreeLibrary(shelldll32);
+			//FreeLibrary(shelldll32);
 		}
 		else
 			wcscpy_s(m_fileName, 512, L"");
@@ -372,7 +372,7 @@ void MemoryHook::registerAllocator(const char* _name, uint64_t _handle)
 {
 	uint8_t		tmpBuffer[512];
 	size_t		tmpBufferPtr = 0;
-	
+
 	uint8_t Marker = LogMarkers::Allocator;
 	addVarToBuffer(Marker, tmpBuffer, tmpBufferPtr);
 	addStrToBuffer(_name, tmpBuffer, tmpBufferPtr);
@@ -757,7 +757,7 @@ void MemoryHook::writeToFile(void* _ptr, size_t _bytesToWrite)
 		memcpy(&m_excessBuffer[m_excessBufferSize], _ptr, _bytesToWrite);
 		m_excessBufferSize += _bytesToWrite;
 	}
-	
+
 #if RMEM_FLUSH_FILE_WRITES
 	if (m_file)
 		fflush(m_file);
@@ -771,7 +771,7 @@ void MemoryHook::writeToFile(void* _ptr, size_t _bytesToWrite)
 //--------------------------------------------------------------------------
 extern size_t getModuleInfo(uint8_t* _buffer);
 void MemoryHook::writeModuleInfo()
-{	
+{
 	uint8_t buffer[32*1024];
 	uint32_t symbolDataSize = (uint32_t)getModuleInfo(buffer);
 

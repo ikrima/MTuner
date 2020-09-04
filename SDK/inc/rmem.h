@@ -220,62 +220,62 @@ extern "C" {
 
 	/* Initialize memory library and set which type of hook to use */
 	/* _data is used internally, pass 0 if manually instrumenting */
-	void rmemInit(void* _data);
+	RMEM_API void rmemInit(void* _data);
 
 	/* If SDK was build with RMEM_ENABLE_DELAYED_CAPTURE defined to 1 (see rmem_config.h for details) */
 	/* then no allocation tracking is done until stil function is called */
-	void rmemStartCapture();
+	RMEM_API void rmemStartCapture();
 
 	/* Shut down memory library and flush data */
-	void rmemShutDown();
+	RMEM_API void rmemShutDown();
 
 	/* Registers a memory tag with a name and name of its parent */
-	void rmemRegisterTag(const char* _name, const char* _parentName);
+	RMEM_API void rmemRegisterTag(const char* _name, const char* _parentName);
 
 	/* Pushes to stack a memory tag that is assigned to all following memory operations */
-	void rmemEnterTag(RMemTag* _tag);
+	RMEM_API void rmemEnterTag(RMemTag* _tag);
 
 	/* Pops from stack a memory tag */
-	void rmemLeaveTag(RMemTag* _tag);
+	RMEM_API void rmemLeaveTag(RMemTag* _tag);
 
 	/* Registers memory marker with the tracking system */
-	void rmemRegisterMarker(RMemMarker* _marker);
+	RMEM_API void rmemRegisterMarker(RMemMarker* _marker);
 
 	/* Records an occurance of a memory marker */
-	void rmemSetMarker(RMemMarker* _marker);
+	RMEM_API void rmemSetMarker(RMemMarker* _marker);
 
 	/* Registers an allocator/heap handle with name */
-	void rmemRegisterAllocator(const char* _name, uint64_t _handle);
+	RMEM_API void rmemRegisterAllocator(const char* _name, uint64_t _handle);
 
 	/* Called for each alloc operation */
-	void rmemAlloc(uint64_t _handle, void* _ptr, uint32_t _size, uint32_t _overhead);
+	RMEM_API void rmemAlloc(uint64_t _handle, void* _ptr, uint32_t _size, uint32_t _overhead);
 
 	/* Called for each realloc operation */
-	void rmemRealloc(uint64_t _handle, void* _ptr, uint32_t _size, uint32_t _overhead, void* _prevPtr);
+	RMEM_API void rmemRealloc(uint64_t _handle, void* _ptr, uint32_t _size, uint32_t _overhead, void* _prevPtr);
 
 	/* Called for each aligned alloc operation */
-	void rmemAllocAligned(uint64_t _handle, void* _ptr, uint32_t _size, uint32_t _overhead, uint32_t _alignment);
+	RMEM_API void rmemAllocAligned(uint64_t _handle, void* _ptr, uint32_t _size, uint32_t _overhead, uint32_t _alignment);
 
 	/* Called for each aligned realloc operation */
-	void rmemReallocAligned(uint64_t _handle, void* _ptr, uint32_t _size, uint32_t _overhead, void* _prevPtr, uint32_t _aAlignment);
+	RMEM_API void rmemReallocAligned(uint64_t _handle, void* _ptr, uint32_t _size, uint32_t _overhead, void* _prevPtr, uint32_t _aAlignment);
 
 	/* Called for each free operation */
-	void rmemFree(uint64_t _handle, void* _ptr);
+	RMEM_API void rmemFree(uint64_t _handle, void* _ptr);
 
 	/* Utility function to create a marker with predefined color */
-	RMemMarker rmemCreateMarker(const char* _name, uint32_t _color);
+	RMEM_API RMemMarker rmemCreateMarker(const char* _name, uint32_t _color);
 
 	/* Utility function to create a marker with custom color */
-	RMemMarker rmemCreateMarkerRGB(const char* _name, uint8_t _r, uint8_t _g, uint8_t _b);
+	RMEM_API RMemMarker rmemCreateMarkerRGB(const char* _name, uint8_t _r, uint8_t _g, uint8_t _b);
 
 	/* Utility function to create a memory tag with a specified name */
-	RMemTag rmemCreateTag(const char* _name);
+	RMEM_API RMemTag rmemCreateTag(const char* _name);
 
 	/* Called on module load with name, base address and module size */
-	void rmemAddModuleC(const char* _name, uint64_t _base, uint32_t _size);
+	RMEM_API void rmemAddModuleC(const char* _name, uint64_t _base, uint32_t _size);
 
 	/* Called on module load with name, base address and module size */
-	void rmemAddModuleW(const wchar_t* _name, uint64_t _base, uint32_t _size);
+	RMEM_API void rmemAddModuleW(const wchar_t* _name, uint64_t _base, uint32_t _size);
 	
 #ifdef __cplusplus
 } /* extern "C" */
