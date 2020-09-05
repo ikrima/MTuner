@@ -34,7 +34,7 @@
 #define RMEM_ENABLE_DELAYED_CAPTURE				0
 
 /// Set to 1 to flush buffers after every file write.
-#define RMEM_FLUSH_FILE_WRITES					1
+#define RMEM_FLUSH_FILE_WRITES					0
 
 /// Buffers size
 #define RMEM_BUFFER_SIZE						128 * 1024

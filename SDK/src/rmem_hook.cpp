@@ -420,6 +420,11 @@ void MemoryHook::alloc(uint64_t _handle, void* _ptr, uint32_t _size, uint32_t _o
 
 	uintptr_t backTrace[RMEM_STACK_TRACE_MAX];
 	uint32_t numTraces = getStackTrace(backTrace, RMEM_STACK_TRACE_MAX, 0);
+	//TODO: ikrimae: #ES2-Memprofiler: Fix getStackTrace(); currently using this bad hack
+	numTraces = numTraces ? numTraces : getStackTrace(backTrace, RMEM_STACK_TRACE_MAX, 0);
+	if (numTraces == 0) {
+		__debugbreak();
+	}
 	writeToBuffer(tmpBuffer, tmpBufferPtr, backTrace, numTraces);
 }
 
@@ -713,7 +718,9 @@ void MemoryHook::writeToFile(void* _ptr, size_t _bytesToWrite)
 	if (!m_file)
 	{
 #if RMEM_PLATFORM_WINDOWS
-		_wfopen_s(&m_file, m_fileName, L"ab");
+		//_wfopen_s(&m_file, m_fileName, L"ab");
+		_wfopen_s(&m_file, m_fileName, L"abc");
+		//m_file = _wfsopen(m_fileName, L"wb", _SH_DENYWR);
 #else
 		m_file = fopen(m_fileName, "ab");
 #endif

@@ -32,10 +32,10 @@ static bool loadModuleFuncs()
 		return true;
 
 	//HMODULE kerneldll32	= ::GetModuleHandleA("kernel32");
-	//HMODULE psapiDLL	= ::GetModuleHandleA("psapi");
+	//HMODULE psapiDLL	= ::LoadLibraryA("Psapi.dll");
 
 	//sFn_getModuleInformation	= reinterpret_cast<fnGetModuleInformation>(loadFunc(kerneldll32, psapiDLL, "GetModuleInformation"));
-	//sFn_enumProcessModules		= reinterpret_cast<fnEnumProcessModules>  (loadFunc(kerneldll32, psapiDLL, "EnumProcessModules"));
+	//sFn_enumProcessModules	= reinterpret_cast<fnEnumProcessModules>  (loadFunc(kerneldll32, psapiDLL, "EnumProcessModules"));
 	//sFn_getModuleFileNameExW	= reinterpret_cast<fnGetModuleFileNameExW>(loadFunc(kerneldll32, psapiDLL, "GetModuleFileNameExW"));
 	sFn_getModuleInformation	= &GetModuleInformation;
 	sFn_enumProcessModules		= &EnumProcessModules;
