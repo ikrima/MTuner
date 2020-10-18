@@ -82,6 +82,7 @@
 #undef RMEM_COMPILER_GCC
 #define RMEM_COMPILER_GCC			1
 
+ /* NB: clang-cl defines both _MSVC_VER && __clang__ */
 #elif defined(_MSC_VER)
 #undef RMEM_COMPILER_MSVC
 #define RMEM_COMPILER_MSVC			1
