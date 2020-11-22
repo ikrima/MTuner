@@ -74,7 +74,7 @@
 #define RMEM_COMPILER_SNC			1
 
 /* check for clang before GCC as clang defines GNU macros as well */
-#elif defined(__clang__)
+#elif defined(__clang__) && !defined(_MSC_VER)
 #undef RMEM_COMPILER_CLANG
 #define RMEM_COMPILER_CLANG			1
 
@@ -277,7 +277,7 @@ extern "C" {
 
 	/* Called on module load with name, base address and module size */
 	RMEM_API void rmemAddModuleW(const wchar_t* _name, uint64_t _base, uint32_t _size);
-	
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif /* __cplusplus */
