@@ -155,23 +155,23 @@ extern "C" {
 			hook->free(_handle, _ptr);
 	}
 
-	RMemMarker rmemCreateMarker(const char* _name, uint32_t _color)
+	RMemMarker rmemCreateMarker(const char* _name, uint32_t _color, bool _register)
 	{
 		RMemMarker marker;
 		marker.m_name = _name;
 		marker.m_color = _color;
 		marker.m_nameHash = rmem::hashStr(_name);
-		rmemRegisterMarker( &marker );
+		if (_register) rmemRegisterMarker( &marker );
 		return marker;
 	}
 
-	RMemMarker rmemCreateMarkerRGB(const char* _name, uint8_t _r, uint8_t _g, uint8_t _b)
+	RMemMarker rmemCreateMarkerRGB(const char* _name, uint8_t _r, uint8_t _g, uint8_t _b, bool _register)
 	{
 		RMemMarker marker;
 		marker.m_name = _name;
 		marker.m_color = 0xff000000 | ((uint32_t)_r << 16) | ((uint32_t)_g << 8) | (uint32_t)_b;;
 		marker.m_nameHash = rmem::hashStr(_name);
-		rmemRegisterMarker( &marker );
+		if (_register) rmemRegisterMarker( &marker );
 		return marker;
 	}
 

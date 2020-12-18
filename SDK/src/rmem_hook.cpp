@@ -73,11 +73,11 @@ namespace rmem {
 /// we need to guarantee that the internal buffer is writable.
 /// Since the buffer is full we need to copy the data so we can
 /// reset the buffer pointer and practically make the buffer empty again.
-/// The code assumes that buffer is big enough to store all information
+/// The code assumes that buffer is big enough to store all information 
 /// resulting from file writing calls. Generally that's not a problem as
 /// it already has to be big enough to store the CRT initialization data.
 /// Since the buffer is static, it is also assumed that this is single
-/// threaded operation which is guaranteed by a lock on a higher level
+/// threaded operation which is guaranteed by a lock on a higher level 
 /// (dispatcher).
 static uint8_t s_tempBuffer[MemoryHook::BufferSize];
 
@@ -88,7 +88,7 @@ MemoryHook::MemoryHook(void* _data)
 	: m_ignoreAllocs(false)
 {
 	(void)_data;
-
+	
 	m_startTime = getCPUClock();
 	m_bufferPtr	= m_bufferData;
 
@@ -117,30 +117,30 @@ MemoryHook::MemoryHook(void* _data)
 
 #if RMEM_PLATFORM_WINDOWS
 	#if RMEM_COMPILER_MSVC
-		toolChain		= ToolChain::Win_MSVC;
+		toolChain	= ToolChain::Win_MSVC;
 	#elif RMEM_COMPILER_GCC
-		toolChain		= ToolChain::Win_gcc;
+		toolChain	= ToolChain::Win_gcc;
 	#endif
 
 #elif RMEM_PLATFORM_LINUX
 	#if RMEM_COMPILER_CLANG
-		toolChain		= ToolChain::Linux_clang;
+		toolChain	= ToolChain::Linux_clang;
 	#elif RMEM_COMPILER_GCC
-		toolChain		= ToolChain::Linux_gcc;
+		toolChain	= ToolChain::Linux_gcc;
 	#endif
 
 #elif RMEM_PLATFORM_OSX
 	#if RMEM_COMPILER_GCC
-		toolChain		= ToolChain::OSX_gcc;
+		toolChain	= ToolChain::OSX_gcc;
 	#else
-		toolChain		= ToolChain::OSX_clang;
+		toolChain	= ToolChain::OSX_clang;
 	#endif
 
 #elif RMEM_PLATFORM_PS3
 	#if RMEM_COMPILER_GCC
-		toolChain		= ToolChain::PS3_gcc;
+		toolChain	= ToolChain::PS3_gcc;
 	#else
-		toolChain		= ToolChain::PS3_snc;
+		toolChain	= ToolChain::PS3_snc;
 	#endif
 
 #elif RMEM_PLATFORM_PS4
@@ -149,11 +149,11 @@ MemoryHook::MemoryHook(void* _data)
 #elif RMEM_PLATFORM_ANDROID
 
 	#if	RMEM_CPU_ARM
-		toolChain = ToolChain::Android_arm;
+		toolChain	= ToolChain::Android_arm;
 	#elif RMEM_CPU_MIPS
-		toolChain = ToolChain::Android_mips;
+		toolChain	= ToolChain::Android_mips;
 	#elif RMEM_CPU_X86
-		toolChain = ToolChain::Android_x86;
+		toolChain	= ToolChain::Android_x86;
 	#else
 		#error
 	#endif
@@ -179,7 +179,7 @@ MemoryHook::MemoryHook(void* _data)
 	writeToBuffer(&verLow, sizeof(verLow));
 	writeToBuffer(&toolChain, sizeof(toolChain));
 	writeToBuffer(&cpuFrequency, sizeof(cpuFrequency));
-
+		
 	//----------- Header data written, below code can allocate memory ---------
 	m_ignoreAllocs = true;
 
@@ -194,7 +194,7 @@ MemoryHook::MemoryHook(void* _data)
 	else
 	{
 		m_fileName[0] = 0;
-		HMODULE shelldll32 = ::GetModuleHandleA("Shell32");
+		HMODULE shelldll32 = ::LoadLibraryA("Shell32");
 		if (shelldll32)
 		{
 			fnSHGetFolderPathW fn = reinterpret_cast<fnSHGetFolderPathW>(reinterpret_cast<void*>(::GetProcAddress(shelldll32, "SHGetFolderPathW")));
@@ -211,7 +211,7 @@ MemoryHook::MemoryHook(void* _data)
 			else
 				m_fileName[0] = 0;
 
-			//FreeLibrary(shelldll32);
+			FreeLibrary(shelldll32);
 		}
 		else
 			wcscpy_s(m_fileName, 512, L"");
@@ -375,7 +375,7 @@ void MemoryHook::registerAllocator(const char* _name, uint64_t _handle)
 {
 	uint8_t		tmpBuffer[512];
 	size_t		tmpBufferPtr = 0;
-
+	
 	uint8_t Marker = LogMarkers::Allocator;
 	addVarToBuffer(Marker, tmpBuffer, tmpBufferPtr);
 	addStrToBuffer(_name, tmpBuffer, tmpBufferPtr);
@@ -740,9 +740,9 @@ void MemoryHook::writeToFile(void* _ptr, size_t _bytesToWrite)
 	if (!m_file)
 	{
 #if RMEM_PLATFORM_WINDOWS
+        //m_file = _wfsopen(m_fileName, L"wb", _SH_DENYWR);
+        _wfopen_s(&m_file, m_fileName, L"abc");
 		//_wfopen_s(&m_file, m_fileName, L"ab");
-		_wfopen_s(&m_file, m_fileName, L"abc");
-		//m_file = _wfsopen(m_fileName, L"wb", _SH_DENYWR);
 #else
 		m_file = fopen(m_fileName, "ab");
 #endif
@@ -786,7 +786,7 @@ void MemoryHook::writeToFile(void* _ptr, size_t _bytesToWrite)
 		memcpy(&m_excessBuffer[m_excessBufferSize], _ptr, _bytesToWrite);
 		m_excessBufferSize += _bytesToWrite;
 	}
-
+	
 #if RMEM_FLUSH_FILE_WRITES
 	if (m_file)
 		fflush(m_file);
@@ -800,7 +800,7 @@ void MemoryHook::writeToFile(void* _ptr, size_t _bytesToWrite)
 //--------------------------------------------------------------------------
 extern size_t getModuleInfo(uint8_t* _buffer);
 void MemoryHook::writeModuleInfo()
-{
+{	
 	uint8_t buffer[32*1024];
 	uint32_t symbolDataSize = (uint32_t)getModuleInfo(buffer);
 
