@@ -423,7 +423,7 @@ void MemoryHook::alloc(uint64_t _handle, void* _ptr, uint32_t _size, uint32_t _o
 
 	uintptr_t backTrace[RMEM_STACK_TRACE_MAX];
 	uint32_t numTraces = getStackTrace(backTrace, RMEM_STACK_TRACE_MAX, 0);
-	//TODO: ikrimae: #ES2-Memprofiler: Fix getStackTrace(); currently using this bad hack
+	//TODO: ikrimae: #TpLib-MTuner: Fix getStackTrace(); currently using this bad hack
 #if RMEM_PLATFORM_WINDOWS
 	// workaround for #66: https://github.com/milostosic/MTuner/issues/66
 	numTraces = numTraces ? numTraces : getStackTrace(backTrace, RMEM_STACK_TRACE_MAX, 0);
